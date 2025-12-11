@@ -1,11 +1,178 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import Link from "next/link";
+
 export default function Home() {
-  const key = process.env.TMDB_API_KEY;
+  const router= useRouter();
+
+  /**
+   * moodKeywords:
+   * - Maps related words to one of the 9 moods
+   * - When the user types something similar, it routes them to the correct mood page
+   */
+  const moodKeywords = {
+    cozy: ["cozy", "warm", "soft", "comforting"],
+    romantic: ["romantic", "love", "date", "crush"],
+    wholesome: ["wholesome", "cute", "uplifting", "sweet"],
+    rainy: ["rainy", "sad", "moody", "melancholy"],
+    nostalgic: ["nostalgic", "memory", "childhood", "retro"],
+    a24: ["a24"],
+    ghibli: ["ghibli", "studio ghibli"],
+    thriller: ["thriller", "scary", "crime", "mystery"],
+    comfort: ["comfort", "feel-good", "safe"],
+  };
+
+  /**
+   * useEffect:
+   * - Adds manual event listener for the search button
+   */
+  useEffect(() => {
+    const input = document.getElementById("moodSearch");
+    const button = document.getElementById("searchButton");
+
+    // Will exit early if elements are not found yet
+    if (!input || !button) return;
+
+    const handleSearch = () => {
+      const value = input.value.toLowerCase().trim();
+
+      if (!value) return;
+
+      // Loops through the moods and see if the user input matches any keywords
+      for (const mood in moodKeywords) {
+        if (moodKeywords[mood].some((word) => value.includes(word))) {
+          router.push(`/mood/${mood}`);
+          return;
+        }
+      }
+
+      // Default mood if there is no match
+      router.push(`/mood/comfort`);
+    };
+
+    // Search handler
+    button.addEventListener("click", handleSearch);
+
+    // Cleanup 
+    return () => button.removeEventListener("click", handleSearch);
+  }, []);
 
   return (
-    <main className="p-10 bg-black">
-      <p className="text-green-400 text-3xl">
-        KEY EXISTS? {key ? "YES" : "NO"}
+    <main className="min-h-screen bg-[#faf7f4] flex flex-col items-center px-6 py-16">
+      
+      {/* Title */}
+      <h1 className="text-5xl font-semibold text-[#2a2a2a] mb-4 tracking-tight">
+        Mood<span className="text-rose-400">Reel</span>
+      </h1>
+
+      {/* Subtitle */}
+      <p className="text-[#6b6b6b] text-lg max-w-md text-center mb-12">
+        Choose a vibe and discover movies that match your mood ₊✩‧₊˚౨ৎ˚₊✩‧₊
       </p>
+
+      {/* Search bar */}
+      <div className="w-full max-w-xl mb-10">
+        <form 
+          action="/mood"
+          onSubmit={(e) => e.preventDefault()}
+          className="relative"
+        >
+          {/* Text input */}
+          <input 
+            type="text"
+            placeholder="What are you feeling today?"
+            id="moodSearch"
+            className="w-full px-5 py-4 rounded-2xl bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-rose-300 transition-all duration-300
+                        placeholder:text-gray-400 text-gray-700"
+          />
+          {/* Search button icon */}
+          <button
+            type="button"
+            id="searchButton"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-rose-400 text-xl hover:text-rose-500 transition"
+          >
+            🔍
+            </button>    
+        </form>
+      </div>
+
+      {/* Mood Buttons Grid */}
+      <div className="grid grid-cols-3 gap-6 w-full max-w-xl place-items-center">
+
+        {/* Cozy */}
+        <Link href="/mood/cozy">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-[#5a3d1e] font-medium">🕯 Cozy</span>
+          </button>
+        </Link>
+
+        {/* Romantic */}
+        <Link href="/mood/romantic">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-rose-200 to-rose-300 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-rose-700 font-medium">💖 Romantic</span>
+          </button>
+        </Link>
+
+        {/* Wholesome */}
+        <Link href="/mood/wholesome">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-yellow-100 to-pink-100 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-[#d97706] font-medium">💌 Wholesome</span>
+          </button>
+        </Link>
+
+        {/* Rainy Day */}
+        <Link href="/mood/rainy">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-slate-200 to-slate-300 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-slate-700 font-medium">🌧 Rainy Day</span>
+          </button>
+        </Link>
+
+        {/* Nostalgic */}
+        <Link href="/mood/nostalgic">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-200 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-pink-700 font-medium">🎀 Nostalgic</span>
+          </button>
+        </Link>
+
+        {/* A24 */}
+        <Link href="/mood/a24">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-purple-200 to-purple-300 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-purple-700 font-medium">🍿 A24</span>
+          </button>
+        </Link>
+
+        {/* Ghibli */}
+        <Link href="/mood/ghibli">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-green-700 font-medium">🌿 Ghibli</span>
+          </button>
+        </Link>
+
+        {/* Thriller */}
+        <Link href="/mood/thriller">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-gray-700 font-medium">🔪 Thriller</span>
+          </button>
+        </Link>
+
+        {/* Comfort */}
+        <Link href="/mood/comfort">
+          <button className="w-[160px] h-[70px] flex items-center justify-center text-center p-5 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 
+            shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+            <span className="text-blue-700 font-medium">💌 Comfort</span>
+          </button>
+        </Link>
+      </div>
     </main>
   );
 }
