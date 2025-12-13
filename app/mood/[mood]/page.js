@@ -2,9 +2,12 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import MovieModal from "@/components/MovieModal";
 
 export default function MoodPage() {
   const { mood } = useParams();
+
+  const [ selectedMovie, setSelectedMovie ] = useState(null);
 
   // states for movie data and ui behaviour 
   const [ movies, setMovies ] = useState([]);                 // stores fetched movies
@@ -22,7 +25,7 @@ export default function MoodPage() {
     cozy: "&with_genres=16,10749,35",                   // animation, romance, comedy
     romantic: "&with_genres=10749",                     
     wholesome: "&with_genres=16,10751",                 // animation, family
-    rainy: "&with_genres=18,9648,28",                      // drama, mystery, action
+    rainy: "&with_genres=18,9648,",                      // drama, mystery, action
     nostalgic: "&primary_release_date.lte=2005-01-01",  
     a24: "&with_companies=41077",                       // a24 studio
     ghibli: "&with_companies=10342",                    // studio ghibli
@@ -146,6 +149,7 @@ export default function MoodPage() {
             {filteredMovies.map((movie) => (
               <div
                 key={movie.id}
+                onClick={() => setSelectedMovie(movie)}
                 className="rounded-xl shadow-md bg-white overflow-hidden hover:-translate-y-1 hover:shadow-xl transition"
               >
                 <img
@@ -177,6 +181,10 @@ export default function MoodPage() {
           )}
         </>
       )}
+      <MovieModal
+        movie={selectedMovie}
+        onClose={() => setSelectedMovie(null)}
+      />
     </main>
   );
 }
