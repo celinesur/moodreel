@@ -60,15 +60,21 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#faf7f4] flex flex-col items-center px-6 py-16">
-      
+    <main className="min-h-screen bg-[#faf7f4] relative overflow-hidden flex flex-col items-center px-6 py-16">
+      <div
+        aria-hidden
+        className="absolute top-[-40px] left-1/2 -translate-x-1/2 w-[360px] h-[220px]
+                    bg-gradient-to-b from-pink-300 via-orange-200 to-transparent
+                    blur-[80px] pointer-events-none"
+      />
+
       {/* Title */}
-      <h1 className="text-5xl font-semibold text-[#2a2a2a] mb-4 tracking-tight">
+      <h1 className="relative text-5xl font-semibold text-[#2a2a2a] mb-4 tracking-tight">
         Mood<span className="text-rose-400">Reel</span>
       </h1>
 
       {/* Subtitle */}
-      <p className="text-[#6b6b6b] text-lg max-w-md text-center mb-12">
+      <p className="relative z-10 text-[#494848] text-lg max-w-md text-center mb-12">
         Choose a vibe and discover movies that match your mood ₊✩‧₊˚౨ৎ˚₊✩‧₊
       </p>
 
@@ -94,8 +100,13 @@ export default function Home() {
             className="absolute right-3 top-1/2 -translate-y-1/2 text-rose-400 text-xl hover:text-rose-500 transition"
           >
             🔍
-            </button>    
+            </button>  
         </form>
+        <p className="text-sm text-gray-400 mt-3">
+            Try typing <span className="text-gray-500">“sad”</span>,{" "}
+            <span className="text-gray-500">“comfort”</span>, or{" "}
+            <span className="text-gray-500">“rom-com”</span>
+          </p>  
       </div>
 
       {/* Mood Buttons Grid */}
