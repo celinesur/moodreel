@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MovieModal from "@/components/MovieModal";
+import MovieCard from "@/components/MovieCard";
 
 export default function MoodPage() {
   const { mood } = useParams();
@@ -147,17 +148,11 @@ export default function MoodPage() {
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
             {filteredMovies.map((movie) => (
-              <div
+              <MovieCard
                 key={movie.id}
+                movie={movie}
                 onClick={() => setSelectedMovie(movie)}
-                className="rounded-xl shadow-md bg-white overflow-hidden hover:-translate-y-1 hover:shadow-xl transition"
-              >
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="w-full h-[240px] object-cover"
-                />
-              </div>
+              />
             ))}
           </div>
 
