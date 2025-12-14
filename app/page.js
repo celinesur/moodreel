@@ -1,17 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import MovieCard from "@/components/MovieCard";
+import MovieModal from "@/components/MovieModal";
+
+/**
+ * Home
+ * - Landing page
+ * - Users can:
+ *  - Search moods using keywords
+ *  - Select moods with the button
+ *  - Browse current popular movies
+ */
 
 export default function Home() {
   const router= useRouter();
+  const [ featuredMovies, setFeaturedMovies ] = useState([]);
+  const [ selectedMovie, setSelectedMovie ] = useState(null);
 
   /**
    * moodKeywords:
    * - Maps related words to one of the 9 moods
    * - When the user types something similar, it routes them to the correct mood page
    */
+  
   const moodKeywords = {
     cozy: ["cozy", "warm", "soft", "comforting"],
     romantic: ["romantic", "love", "date", "crush"],
@@ -57,6 +71,22 @@ export default function Home() {
 
     // Cleanup 
     return () => button.removeEventListener("click", handleSearch);
+  }, []);
+
+  useEffect(() => {
+    async function fetchFeatured() {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&include_adult=false`
+        );
+        const data = await res.json();
+        setFeaturedMovies(data.results.slice(0, 8));
+      } catch (err) {
+        console.error("Failed to fetch featured movies", err);
+      }
+    }
+
+    fetchFeatured();
   }, []);
 
   return (
@@ -184,6 +214,31 @@ export default function Home() {
           </button>
         </Link>
       </div>
+
+      {/* Featured section */}
+      {featuredMovies.length > 0 && (
+        <section className="w-full max-w-6xl mt-20">
+          <h2 className="text-xl font-semibold text-[#2a2a2a] mb-4">
+            Popular right now
+          </h2>
+
+          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+            {featuredMovies.map((movie) => (
+              <div
+                key={movie.id}
+                className="min-w-[160px]"
+                onClick={() => setSelectedMovie(movie)}
+              >
+                <MovieCard movie={movie} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      <MovieModal
+        movie={selectedMovie}
+        onClose={() => setSelectedMovie(null)}
+      />
     </main>
   );
 }

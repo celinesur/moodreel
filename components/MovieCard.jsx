@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * MovieCard
+ * - Displays a movie poster in a fixed aspect-ratio container 
+ * 
+ * Props:
+ * - movie: TMDB movie object
+ * - onClick: function to trigger the modal to open
+ */
+
 export default function MovieCard({ movie, onClick }) {
   return (
     <div 

@@ -5,6 +5,12 @@ import { useEffect, useState } from "react";
 import MovieModal from "@/components/MovieModal";
 import MovieCard from "@/components/MovieCard";
 
+/**
+ * MoodPage
+ * - Displays a grid of movies based on the selected mood
+ * - Supports pagincation, sorting, content filtering, and a detailed modal view for each movie
+ */
+
 export default function MoodPage() {
   const { mood } = useParams();
 
@@ -76,6 +82,7 @@ export default function MoodPage() {
    * - remove NSFW and inappropriate content
    * - remove low-quality movies
    */
+  
   const filteredMovies = movies
     .filter((movie) => movie.poster_path)
     .filter((movie) => {

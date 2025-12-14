@@ -3,6 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import ColorThief from "colorthief";
 
+/**
+ * MovieModal
+ * - Displays detailed information about a selected movie
+ * - Also extracts dominant color palette from the movie image 
+ * 
+ * Props:
+ * - movie: TMDB movie object to display
+ * - onClose: function to close the modal
+ */
+
 export default function MovieModal({ movie, onClose }) {
 
   // stores extracted color palette from movie image
@@ -57,7 +67,7 @@ export default function MovieModal({ movie, onClose }) {
         </button>
 
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Poster */}
+          {/* Movie Poster */}
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={movie.title}
@@ -71,8 +81,10 @@ export default function MovieModal({ movie, onClose }) {
             </h2>
 
             <p className="text-gray-500 text-sm mb-3">
-              {movie.release_date?.slice(0, 4)} • ⭐{" "}
-              {movie.vote_average.toFixed(1)}
+              {movie.release_date?.slice(0, 4)}{" "}
+              {movie.vote_average && (
+                <>• ⭐{movie.vote_average.toFixed(1)}</>
+              )}
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
