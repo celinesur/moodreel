@@ -18,6 +18,10 @@ export default function MovieModal({ movie, onClose }) {
   // stores extracted color palette from movie image
   const [ colors, setColors ] = useState([]);
 
+  // use dominant color for subtle background tint
+  const primaryColor = colors?.[1] || colors?.[2] || colors?.[0];
+  const accentColor = colors?.[2] || colors?.[3] || colors?.[1];
+
   /**
    * extract dominant colors whenever a new movie is selected
    * uses the backdrop image when available for better color accuracy
@@ -45,19 +49,49 @@ export default function MovieModal({ movie, onClose }) {
     };
   }, [movie]);
 
+  function rgbToHex([r, g, b]) {
+    return (
+      "#" +
+      [r, g, b]
+        .map((x) => x.toString(16).padStart(2, "0"))
+        .join("")
+        .toUpperCase()
+    );
+  }
+
   // do not render modal if no movie is selected
   if (!movie) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/65 flex items-center justify-center z-50"
       onClick={onClose}
     >
       {/* Modal container */}
       <div
-        className="bg-white rounded-2xl shadow-xl max-w-3xl w-full mx-6 p-6 relative"
+        className="relative"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* pallete based glow */}
+        {primaryColor && (
+          <div
+            aria-hidden
+            className="absolute -inset-40 rounded-full blur-[160px] opacity-90 pointer-events-none"
+            style={{
+              background: `
+                radial-gradient(
+                  circle at center,
+                  rgba(${primaryColor.join(",")}, 1.0),
+                  rgba(${accentColor?.join(",") || primaryColor.join(",")}, 1.0) 60%,
+                  transparent 25%
+                )
+              `,
+            }}
+          />
+        )}
+
+        <div className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full mx-6 p-6 z-10">
+
         {/* Close button */}
         <button
           onClick={onClose}
@@ -99,21 +133,34 @@ export default function MovieModal({ movie, onClose }) {
                 </h3>
 
                 <div className="flex gap-3">
-                  {colors.map((color, i) => (
-                    <div
-                      key={i}
-                      className="w-10 h-10 rounded-full shadow"
-                      style={{
-                        backgroundColor: `rgb(${color.join(",")})`,
-                      }}
-                    />
-                  ))}
-                </div>
+                  {colors.map((color, i) => {
+                    const hex = rgbToHex(color);
+
+                    return (
+                      <div 
+                        key={i} 
+                        className="relative group"
+                      >
+                        <div 
+                          className="w-10 h-10 rounded-full shadow"
+                          style={{ backgroundColor: `rgb(${color.join(",")})` }}
+                        />
+
+                        {/* tooltip */}
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-rose-500 text-white text-xs opacity-0 group-hover:opacity-100
+                                        transition pointer-events-none"
+                        >
+                          {hex}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
+      </div>
     </div>
-  );
-}
+  </div>
+)};

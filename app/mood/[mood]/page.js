@@ -61,7 +61,13 @@ export default function MoodPage() {
 
         // adds new results to existing movies
         if (data?.results?.length) {
-          setMovies((prev) => [...prev, ...data.results]);
+          setMovies((prev) => {
+            const existingIds = new Set(prev.map((m) => m.id));
+            const newMovies = data.results.filter(
+              (movie) => !existingIds.has(movie.id)
+            );
+            return [...prev, ...newMovies];
+          });
         } else {
           // no more results are available
           setHasMore(false);
@@ -113,10 +119,10 @@ export default function MoodPage() {
     .filter((movie) => movie.vote_count > 200 && movie.vote_average >= 6);
 
   return (
-    <main className="min-h-screen bg-[#faf7f4] px-6 py-12">
+    <main className="min-h-screen bg-gradient-to-b from -[#fff1f4] via-[#fde7ec] px-6 py-12">
       {/* Header */}
       <h1 className="text-4xl font-semibold text-[#2a2a2a] mb-2 tracking-tight">
-        {formattedMood} Movies
+        {formattedMood} Movies 𓏲ּ𝄢
       </h1>
 
       {/* Subtitle */}

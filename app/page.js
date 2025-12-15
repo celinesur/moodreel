@@ -90,12 +90,11 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#faf7f4] relative overflow-hidden flex flex-col items-center px-6 py-16">
+    <main className="min-h-screen bg-gradient-to-b from -[#fff1f4] via-[#fde7ec] relative overflow-hidden flex flex-col items-center px-6 py-16">
       <div
         aria-hidden
-        className="absolute top-[-40px] left-1/2 -translate-x-1/2 w-[360px] h-[220px]
-                    bg-gradient-to-b from-pink-300 via-orange-200 to-transparent
-                    blur-[80px] pointer-events-none"
+        className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-gradient-to-b from-pink-300/40 via-rose-200/30 to-transparent
+                    blur-[90px] pointer-events-none"
       />
 
       {/* Title */}
